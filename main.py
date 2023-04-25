@@ -59,11 +59,13 @@ def compute_cluster(mean,cov,enclosing_circle,ax):
     # print(pmax)
     plt.scatter([pmax[0]],[pmax[1]],color="green")
 
-    pri_user = random.randint(1,len(Users))
-    print(Users[pri_user-1])
-    pri_pt = priority_user.optimalPos(grids,Users[pri_user-1]["coord"])
-    print(pri_pt)
-    plt.scatter([pri_pt[0],Users[pri_user-1]["coord"][0]],[pri_pt[1],Users[pri_user-1]["coord"][1]],color="red")
+    # #priority user
+    # pri_user = random.randint(1,len(Users))
+    # print(Users[pri_user-1])
+    # pri_pt = priority_user.optimalPos(grids,Users[pri_user-1]["coord"])
+    # print(pri_pt)
+    # plt.scatter([pri_pt[0],Users[pri_user-1]["coord"][0]],[pri_pt[1],Users[pri_user-1]["coord"][1]],color="red")
+    return (c_con[0]-r_sec,c_con[0]+r_sec,c_con[1]-r_sec,c_con[1]+r_sec)
 
     # # create a figure and axis object
     # fig, ax = plt.subplots(1)
@@ -83,14 +85,20 @@ def compute_cluster(mean,cov,enclosing_circle,ax):
 
  # create a figure and axis object
 fig, ax = plt.subplots()
- # set the x and y limits of the axis to show the circle
-ax.set_xlim(-30,55)
-ax.set_ylim(-25,55)
 mean = [0, 0]
 cov = [[50, 10], [10, 50]]
-compute_cluster(mean,cov,enclosing_circle,ax)
-mean = [30, 30]
+xl1,xe1,yl1,yr1 = compute_cluster(mean,cov,enclosing_circle,ax)
+mean = [0, 50]
 cov = [[50, 10], [10, 50]]
-compute_cluster(mean,cov,enclosing_circle,ax)
+xl2,xe2,yl2,yr2 = compute_cluster(mean,cov,enclosing_circle,ax)
+mean = [100, 30]
+cov = [[50, 10], [10, 50]]
+xl3,xe3,yl3,yr3 = compute_cluster(mean,cov,enclosing_circle,ax)
+mean = [-80, 30]
+cov = [[50, 10], [10, 50]]
+xl4,xe4,yl4,yr4 = compute_cluster(mean,cov,enclosing_circle,ax)
+# set the x and y limits of the axis to show the circle
+ax.set_xlim(min(xl1,xl2,xl3,xl4)-2,max(xe1,xe2,xe3,xe4)+2)
+ax.set_ylim(min(yl1,yl2,yl3,yl4)-2,max(yr1,yr2,yr3,yr4)+2)
 plt.show()
 input()

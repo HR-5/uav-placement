@@ -90,7 +90,7 @@ def estimateThroughput(Users,Rates,Caps):
     for ind,cap in enumerate(Caps):
         throughput += t[ind]*cap
 
-    print("T= "+str(throughput))
+    # print("T= "+str(throughput))
     return throughput
 
 
