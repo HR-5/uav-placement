@@ -6,7 +6,9 @@ import grid_points
 import optimal_position
 import random
 import enclosing_circle
-import priority_user
+import tabu_search
+import priority_weight
+
 
 # set the mean and covariance matrix
 def compute_cluster(mean,cov,enclosing_circle,ax):
@@ -55,9 +57,13 @@ def compute_cluster(mean,cov,enclosing_circle,ax):
     for i in range(len(points)):
         Rates.append(random.uniform(1.5,2))
 
-    pmax = optimal_position.optimalPosition(Users,Rates,0.01,grids,1)
+    pmax,throughputList = optimal_position.optimalPosition(Users,Rates,0.01,grids,1)
     # print(pmax)
-    plt.scatter([pmax[0]],[pmax[1]],color="green")
+    # plt.scatter([pmax[0]],[pmax[1]],color="green")
+
+    # fin_pt = priority_weight.mean_pos(Users,grids)
+    # print(fin_pt)
+    # plt.scatter([fin_pt[0]],[fin_pt[1]],color="purple")
 
     # #priority user
     # pri_user = random.randint(1,len(Users))
@@ -65,7 +71,7 @@ def compute_cluster(mean,cov,enclosing_circle,ax):
     # pri_pt = priority_user.optimalPos(grids,Users[pri_user-1]["coord"])
     # print(pri_pt)
     # plt.scatter([pri_pt[0],Users[pri_user-1]["coord"][0]],[pri_pt[1],Users[pri_user-1]["coord"][1]],color="red")
-    return (c_con[0]-r_sec,c_con[0]+r_sec,c_con[1]-r_sec,c_con[1]+r_sec)
+    return (c_con[0]-r_sec,c_con[0]+r_sec,c_con[1]-r_sec,c_con[1]+r_sec,throughputList,grids)
 
     # # create a figure and axis object
     # fig, ax = plt.subplots(1)
@@ -87,16 +93,27 @@ def compute_cluster(mean,cov,enclosing_circle,ax):
 fig, ax = plt.subplots()
 mean = [0, 0]
 cov = [[50, 10], [10, 50]]
-xl1,xe1,yl1,yr1 = compute_cluster(mean,cov,enclosing_circle,ax)
+xl1,xe1,yl1,yr1,thrList1,grids1 = compute_cluster(mean,cov,enclosing_circle,ax)
 mean = [0, 50]
 cov = [[50, 10], [10, 50]]
-xl2,xe2,yl2,yr2 = compute_cluster(mean,cov,enclosing_circle,ax)
+xl2,xe2,yl2,yr2,thrList2,grids2 = compute_cluster(mean,cov,enclosing_circle,ax)
 mean = [100, 30]
 cov = [[50, 10], [10, 50]]
-xl3,xe3,yl3,yr3 = compute_cluster(mean,cov,enclosing_circle,ax)
+xl3,xe3,yl3,yr3,thrList3,grids3 = compute_cluster(mean,cov,enclosing_circle,ax)
 mean = [-80, 30]
 cov = [[50, 10], [10, 50]]
-xl4,xe4,yl4,yr4 = compute_cluster(mean,cov,enclosing_circle,ax)
+xl4,xe4,yl4,yr4,thrList4,grids4 = compute_cluster(mean,cov,enclosing_circle,ax)
+clusterThr = [thrList1,thrList2,thrList3,thrList4]
+grid_pts = [grids1,grids2,grids3,grids4]
+ini_pos = [0,0,0,0]
+uav = random.randint(0,len(grid_pts)-1)
+best_sol = tabu_search.tabu_search(ini_pos,grid_pts,10,1,clusterThr,uav)
+best_x = []
+best_y = []
+for i,pts in enumerate(best_sol):
+    best_x.append(grid_pts[i][pts][0])
+    best_y.append(grid_pts[i][pts][1])
+plt.scatter(best_x,best_y,color="green")
 # set the x and y limits of the axis to show the circle
 ax.set_xlim(min(xl1,xl2,xl3,xl4)-2,max(xe1,xe2,xe3,xe4)+2)
 ax.set_ylim(min(yl1,yl2,yl3,yl4)-2,max(yr1,yr2,yr3,yr4)+2)

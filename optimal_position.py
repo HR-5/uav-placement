@@ -96,13 +96,15 @@ def estimateThroughput(Users,Rates,Caps):
 
 def optimalPosition(Users,Rates,Pt,grid_points,I):
     throughputMax = 0
+    thrList = []
     pmax = grid_points[0]
     for i,point in enumerate(grid_points):
         C = computeCapacity(point,Users,I,Pt)
         throughput = estimateThroughput(Users,Rates,C)
+        thrList.append(throughput)
         if(throughputMax<throughput):
             throughputMax = throughput
             pmax = point
         
         
-    return pmax
+    return pmax,thrList
