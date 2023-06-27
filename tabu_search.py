@@ -7,6 +7,7 @@ def tabu_search(initial_pos,maxIter,maxTabuIter,clusThr,pri_uav):
     current_sol = initial_pos
     tabulist = []
     best_sol = current_sol
+    thrs = []
     # print(initial_pos)
     # print(grid_points)
     # print(clusThr)
@@ -47,10 +48,11 @@ def tabu_search(initial_pos,maxIter,maxTabuIter,clusThr,pri_uav):
             bestThr = bestCandThr
         tabulist[uav][bestCanPos] = it
         it = it +1
+        thrs.append(bestCandThr)
 
     # print(best_sol)
     # print(bestThr)
-    return best_sol,bestThr
+    return best_sol,bestThr,thrs
 
 
 

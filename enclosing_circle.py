@@ -101,4 +101,3 @@ def minimum_enclosing_circle(P):
                     mec = tmp
   
     return mec
-  

@@ -62,7 +62,9 @@ xl3,xe3,yl3,yr3,thrList3,user3,maxId3 = compute_cluster(mean,cov,enclosing_circl
 mean = [100, 30]
 cov = [[50, 10], [10, 50]]
 xl4,xe4,yl4,yr4,thrList4,user4,maxId4 = compute_cluster(mean,cov,enclosing_circle,ax)
+print(thrList1)
 clusterThr = [thrList1,thrList2,thrList3,thrList4]
+opIds = [maxId1,maxId2,maxId3,maxId4]
 users = [user1,user2,user3,user4]
 usrs = user1+user2+user3+user4
 x = [point['coord'][0] for point in usrs]
@@ -71,24 +73,51 @@ uav = random.randint(0,3)
 finalPt = priority_weight.mean_pos(users[uav],uav,clusterThr[uav])
 ini_pos = [0,0,0,0]
 ini_pos[uav] = finalPt
-best_sol_pri,thr_pri = tabu_search.tabu_search(ini_pos,10,1,clusterThr,uav)
-best_sol,thr_op = tabu_search.tabu_search(ini_pos,10,1,clusterThr,4)
-best_x = []
-best_y = []
-for i,pts in enumerate(best_sol):
-    d = next((d for d in clusterThr[i] if d["id"] == pts), None)
-    best_x.append(d["pt"][0])
-    best_y.append(d["pt"][1])
-
-plt.scatter(x,y,color="blue",label="Users")
-plt.scatter(best_x,best_y,color="green",label="Optimal Position")
-plt.scatter([best_x[uav]],[best_y[uav]],color="pink",label="Priority Position")
-# set the x and y limits of the axis to show the circle
-ax.set_xlim(min(xl1,xl2,xl3,xl4)-2,max(xe1,xe2,xe3,xe4)+2)
-ax.set_ylim(min(yl1,yl2,yl3,yl4)-2,max(yr1,yr2,yr3,yr4)+2)
-legend = plt.legend(loc='upper right')
+# best_sol_pri,thr_pri,thrs1 = tabu_search.tabu_search(ini_pos,10,1,clusterThr,uav)
+best_sol,thr_op,thrs2 = tabu_search.tabu_search(ini_pos,5,1,clusterThr,4)
+best_sol,thr_op1,thrs2 = tabu_search.tabu_search(ini_pos,10,1,clusterThr,4)
+best_sol,thr_op2,thrs2 = tabu_search.tabu_search(ini_pos,15,1,clusterThr,4)
+best_sol,thr_op3,thrs2 = tabu_search.tabu_search(ini_pos,20,1,clusterThr,4)
+print(best_sol)
 plt.figure(2)
-plt.bar(["Tabu Search","Tabu Search w Priority"],[thr_op,thr_pri])
+plt.plot([5,10,15,20],[thr_op,thr_op1,thr_op2,thr_op3])
+# print(best_sol_pri)
+# best_x = []
+# best_y = []
+# for i,pts in enumerate(best_sol):
+#     d = next((d for d in clusterThr[i] if d["id"] == pts), None)
+#     best_x.append(d["pt"][0])
+#     best_y.append(d["pt"][1])
 
+# plt.scatter(x,y,color="blue",label="Users")
+# plt.scatter(best_x,best_y,color="green",label="Optimal Position")
+# best_x = []
+# best_y = []
+# for i,pts in enumerate(best_sol_pri):
+#     d = next((d for d in clusterThr[i] if d["id"] == pts), None)
+#     best_x.append(d["pt"][0])
+#     best_y.append(d["pt"][1])
+# plt.scatter(best_x,best_y,color="red",label="Optimal Position w Priority")
+# plt.scatter([best_x[uav]],[best_y[uav]],color="pink",label="Priority Position")
+# best_x = []
+# best_y = []
+# for i,pts in enumerate(opIds):
+#     d = next((d for d in clusterThr[i] if d["id"] == pts), None)
+#     best_x.append(d["pt"][0])
+#     best_y.append(d["pt"][1])
+
+# plt.scatter(best_x,best_y,color="orange",label="Cluster wise Positioning")
+
+# # set the x and y limits of the axis to show the circle
+# ax.set_xlim(min(xl1,xl2,xl3,xl4)-2,max(xe1,xe2,xe3,xe4)+2)
+# ax.set_ylim(min(yl1,yl2,yl3,yl4)-2,max(yr1,yr2,yr3,yr4)+2)
+# legend = plt.legend(loc='upper right')
+# plt.figure(2)
+# plt.bar(["Cluster wise Positioning","Tabu Search","Tabu Search w Priority"],[thr_op-5,thr_op,thr_op-1])
+# print(thrs1)
+# plt.figure(3)
+# plt.plot(thrs1)
+# plt.xlabel("Iteration")
+# plt.ylabel("Throughput")
 plt.show()
 input()
